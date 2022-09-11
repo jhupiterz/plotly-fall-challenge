@@ -16,7 +16,7 @@ def choropleth_map(df, geojson, center, metric):
     return fig
 
 def bar_chart(df):
-    fig = px.bar(df, x='category_name', y='sale_dollars', width = 400, height = 250)
+    fig = px.bar(df, x='category_name', y='sale_dollars', width = 530, height = 300)
     fig.update_yaxes(visible=False)
     fig.update_xaxes(title='')
     fig.update_layout(
