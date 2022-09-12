@@ -1,5 +1,6 @@
-from queue import Full
+from turtle import width
 import plotly.express as px
+import plotly.graph_objects as go
 import utils
 
 def choropleth_map(df, geojson, center, metric):
@@ -16,7 +17,7 @@ def choropleth_map(df, geojson, center, metric):
     return fig
 
 def bar_chart(df):
-    fig = px.bar(df, x='category_name', y='sale_dollars', width = 530, height = 300)
+    fig = px.bar(df, x='category_name', y='benefit', width = 600, height = 350)
     fig.update_yaxes(visible=False)
     fig.update_xaxes(title='')
     fig.update_layout(
@@ -26,4 +27,38 @@ def bar_chart(df):
         plot_bgcolor='rgba(0, 0, 0, 0)',
         title_text= 'Top categories ($)',
         title_x = 0.5)
+    return fig
+
+def cum_sales(df):
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=df.date, y=df.cum_sum_benefit,
+                        mode='lines+markers',
+                        name='cum. benefits'))
+    fig.add_trace(go.Scatter(x=df.date, y=df.cum_sum_cost,
+                        mode='lines+markers',
+                        name='cum. costs'))
+    fig.add_trace(go.Scatter(x=df.date, y=df.cum_sum_profit,
+                        mode='lines+markers',
+                        name='cum. profits'))
+    fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor='LightGrey')
+    fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor='LightGrey')
+    fig.update_layout(
+        width = 610,
+        height = 350,
+        hovermode="x unified",
+        title_x=0.5,
+        margin=dict(l=1, r=1, t=30, b=0),
+        paper_bgcolor='rgba(0, 0, 0, 0)',
+        legend={'title_text':''},
+        plot_bgcolor='rgba(0, 0, 0, 0)')
+    return fig
+
+def dist_plot(df, profit):
+    fig = px.violin(df, x='profit', log_x=True, width=250, height=180)
+    fig.update_xaxes(range=[0, 5.5])
+    fig.add_vline(x=profit, line_width=2, line_dash="dash", line_color="#ba1e7f")
+    fig.update_layout(
+            title_x=0.5,
+            margin=dict(l=1, r=1, t=30, b=0),
+            paper_bgcolor='rgba(0, 0, 0, 0)')
     return fig
