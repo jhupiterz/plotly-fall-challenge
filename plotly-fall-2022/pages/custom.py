@@ -24,34 +24,21 @@ switches = html.Div(
     ]
 )
 
-def create_card(image_name, title):
+def create_card(image_name, title, margin_right='0px'):
     return dbc.Card(
-        [
-            dbc.Row(
                 [
-                    dbc.Col(
-                        dbc.CardImg(
-                            src=f"assets/{image_name}.png",
-                            className="img-fluid rounded-start",
-                            style = {'margin-right': '-0.1rem'}
-                        ),
-                        className="col-md-4",
-                    ),
-                    dbc.Col(
-                        dbc.CardBody(
-                            [
-                                html.H4(title, className="card-title", style={'font-size': '16px', 'margin-left': '-0.1rem'}),
-                            ]
-                        ),
-                        className="col-md-8",
+                    dbc.CardImg(src=f"assets/{image_name}.png", top=True, style = {"width":"6rem", "height": "6rem", 'margin': 'auto'}),
+                    dbc.CardBody(
+                        [
+                            dbc.Checklist(options=[{"label": title, "value": True}],
+                                        id ='include-pie-chart', switch=True,
+                                        style = {'font-size': '14px', 'width': '6.5rem', 'margin': 'auto', 'padding': '0.1rem',
+                                                 'padding-bottom':'-0.2rem', 'margin-top':'-1rem'}),
+                        ]
                     ),
                 ],
-                className="g-0 d-flex align-items-center",
+                style={"width": "7rem", 'height': '8rem', 'display': 'flex', 'flex-direction': 'column', 'align-items': 'center', 'margin-right': margin_right},
             )
-        ],
-        className="mb-3",
-        style={"maxWidth": "10rem", 'padding': '0.1rem'},
-    )
 
 layout = html.Div([
 
@@ -64,21 +51,20 @@ layout = html.Div([
                 dbc.ModalHeader(dbc.ModalTitle("What do you wish to visualize?"), style={'margin': 'auto'}),
                 dbc.ModalBody(children=[
                     html.Div(id = 'metrics', children = [
-                        html.H4('Step 1: pick your metrics (max. 4)', style = {'margin-top': '0.5rem', 'text-align': 'center', 'margin-bottom': '2rem'}),
-                        switches
-                    ], style = {'order':'1', 'display': 'flex', 'flex-direction': 'column', 'align-items': 'center', 'width': '35vw', 'height':'60vh', 'backgroundColor': 'grey', 'justify-content': 'flex-start'}),
+                        html.H5('Step 1: pick your metrics (max. 4)', style = {'margin-top': '0.5rem', 'text-align': 'center', 'margin-bottom': '3rem'}),
+                        switches,
+                        dbc.Button("Submit choices", size ='lg', className="me-1", style={'margin-top': '3.2rem'})
+                    ], style = {'order':'1', 'display': 'flex', 'flex-direction': 'column', 'align-items': 'center', 'width': '35vw', 'height':'60vh', 'backgroundColor': '#a4e57a', 'justify-content': 'flex-start', 'border-radius': '5px 0px 0px 5px'}),
                     html.Div(id = 'graphs', children = [
-                        html.H4('Step 2: pick your graphs (max. 4)', style = {'order':'1', 'margin-top': '0.5rem', 'text-align': 'center'}),
-                        create_card('pie_chart', 'Pie chart'),
-                        create_card('bar_chart', 'Bar chart'),
-                        create_card('line_chart', 'Line chart'),
-                        create_card('iowa', 'Iowa map'),
-                        create_card('waterfall', 'Waterfall'),
-                    ], style = {'order':'2', 'display': 'flex', 'flex-direction': 'column', 'align-items': 'center', 'width': '35vw', 'height':'60vh', 'backgroundColor': 'grey'}),
+                        html.H5('Step 2: pick your graphs (max. 4)', style = {'order':'1', 'margin-top': '0.5rem', 'margin-bottom': '1.5rem', 'text-align': 'center'}),
+                        html.Div(children = [create_card('pie_chart', 'Pie chart', '4rem'), create_card('bar_chart', 'Bar chart')], style = {'order': '2', 'display': 'flex', 'flex-direction': 'row', 'align-items': 'center', 'justify-content': 'space-around', 'margin-bottom': '1rem'}),
+                        html.Div(children = [create_card('line_chart', 'Line chart', '4rem'), create_card('iowa', 'Iowa map')], style = {'order': '3', 'display': 'flex', 'flex-direction': 'row', 'align-items': 'center', 'justify-content': 'space-around', 'margin-bottom': '1rem'}),
+                        html.Div(children = [create_card('waterfall', 'Waterfall')], style = {'order': '4', 'display': 'flex', 'flex-direction': 'row', 'align-items': 'center', 'justify-content': 'space-around'}),
+                    ], style = {'order':'2', 'display': 'flex', 'flex-direction': 'column', 'align-items': 'center', 'width': '35vw', 'height':'60vh', 'backgroundColor': '#a4e57a', 'border-radius': '0px 5px 5px 0px'}),
                 ], style = {'display':'flex', 'flex-direction': 'row', 'align-items': 'center', 'justify-content': 'space-around'}),
             ],
             id="enter-custom-choices",
-            size="xl",
+            size="lg",
             style={'color': 'black', 'font-family': 'Arial, sans-serif', 'font-size': '1.5vw'},
             is_open=True,
         ),
