@@ -17,7 +17,7 @@ def choropleth_map(df, geojson, center, metric):
     return fig
 
 def bar_chart(df):
-    fig = px.bar(df, x='category_name', y='benefit', width = 600, height = 350)
+    fig = px.bar(df, x='category_name', y='benefit', width = 550, height = 300)
     fig.update_yaxes(visible=False)
     fig.update_xaxes(title='')
     fig.update_layout(
@@ -29,7 +29,13 @@ def bar_chart(df):
         title_x = 0.5)
     return fig
 
-def cum_sales(df):
+def cum_sales(df, county=False):
+    if county == False:
+        width = 610
+        height = 350
+    else: 
+        width = 590
+        height = 300
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=df.date, y=df.cum_sum_benefit,
                         mode='lines+markers',
@@ -43,8 +49,8 @@ def cum_sales(df):
     fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor='LightGrey')
     fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor='LightGrey')
     fig.update_layout(
-        width = 610,
-        height = 350,
+        width = width,
+        height = height,
         hovermode="x unified",
         title_x=0.5,
         margin=dict(l=1, r=1, t=30, b=0),
