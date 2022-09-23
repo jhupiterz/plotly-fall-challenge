@@ -27,9 +27,9 @@ layout = html.Div([
         html.Div(id = 'top-buyer', style = {'order': '2', 'margin-bottom': '2rem', 'backgroundColor': 'white', 'border-radius': '5px', 'width': '540px'}),
         html.Div(id = 'top-vendor', style = {'order': '3', 'margin-bottom': '2rem', 'backgroundColor': 'white', 'border-radius': '5px', 'width': '540px'}),
         html.Div(id = 'top-item', style = {'order': '4', 'margin-bottom': '2rem', 'backgroundColor': 'white', 'border-radius': '5px', 'width': '540px'}),
-        html.Div(id = 'hover-bar-chart', children = [], style = {'order': '5'})],
+        html.Div(id = 'hover-bar-chart', children = [], style = {'order': '6'})],
         #html.Div(id = 'hover-pie-chart', children = [], style = {'order': '2'})],
-        style = {'order':'2', 'height': '80vh', 'width': '35vw', 'display': 'flex', 'flex-direction': 'column', 'align-items': 'center', 'margin-top': '11.7vh', 'justify-content': 'flex-end', 'margin-right': '2.3rem'})
+        style = {'order':'2', 'height': '80vh', 'width': '35vw', 'display': 'flex', 'flex-direction': 'column', 'align-items': 'center', 'justify-content': 'flex-end', 'margin-right': '2.3rem', 'margin-top': '8.6vh'})
 
 ], style = {'width': '100vw', 'height': '100vh', 'backgroundColor': '#5e17eb', 'display': 'flex', 'flex-direction': 'row', 'align-items': 'flex-start', 'justify-content': 'space-between'})
 
@@ -67,7 +67,10 @@ def create_bar_chart(hoverData, data):
         FIPS = hoverData['points'][0]['location']
         df_to_plot = df[df['full_fips'] == FIPS].groupby('category_name', as_index=False).sum()[['category_name', 'benefit', 'volume_sold_liters']].sort_values('benefit', ascending=False).head(6)
         fig = plots.bar_chart(df_to_plot)
-        return dcc.Graph(figure=fig, style = {'backgroundColor': 'white', 'border-radius': '5px', 'width': '540px', 'height': '310px', 'padding': '5px'})
+        return html.Div([
+            html.H2('Top categories', style = {'order': '5', 'color': '#a4e57a', 'margin-bottom': '1rem'}),
+            dcc.Graph(figure=fig, style = {'backgroundColor': 'white', 'border-radius': '5px', 'width': '540px', 'height': '310px', 'padding': '5px'})
+        ])
 
 @callback(
     Output('county_name', 'children'),

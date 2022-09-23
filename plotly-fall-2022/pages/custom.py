@@ -1,5 +1,5 @@
 import dash
-from dash import dcc, html, Input, Output
+from dash import dcc, html, Input, Output, callback
 import dash_bootstrap_components as dbc
 
 dash.register_page(__name__, path='/custom')
@@ -44,6 +44,7 @@ layout = html.Div([
 
     html.Div([
         html.H1(['Iowa Liquor Sales',html.Br(),'Make your own dashboard!'], style = {'order':'1', 'color': '#a4e57a', 'margin-top': '2rem', 'text-align': 'left'}),
+        dbc.Button("New dashboard", id = 'new-dash-button', size = 'lg', className="me-1", style={'order': '2'}, n_clicks=0)
         ], style = {'order':'1', 'height': '80vh', 'width': '50vw', 'display': 'flex', 'flex-direction': 'column', 'align-items': 'flex-start', 'margin-left': '7rem', 'padding': '0px'}),
 
         dbc.Modal(
@@ -66,8 +67,14 @@ layout = html.Div([
             id="enter-custom-choices",
             size="lg",
             style={'color': 'black', 'font-family': 'Arial, sans-serif', 'font-size': '1.5vw'},
-            is_open=True,
+            is_open=False,
         ),
     
     ], style = {'width': '100vw', 'height': '100vh', 'backgroundColor': '#5e17eb', 'display': 'flex',
                 'flex-direction': 'row', 'align-items': 'flex-start', 'justify-content': 'space-between'})
+
+@callback(Output('enter-custom-choices', 'is_open'),
+          Input('new-dash-button', 'n_clicks'))
+def update_modal(n_clicks):
+    if n_clicks > 0:
+        return True

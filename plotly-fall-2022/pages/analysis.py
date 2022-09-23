@@ -39,7 +39,7 @@ layout = html.Div([
                         ],
                         style = {'margin-top': '0.5vh', 'margin-left': '0.1vw'},
                         id="card-tabs",
-                        active_tab="specific",
+                        active_tab="iowa",
                     )
                 ),
                 dbc.CardBody(html.P(id="card-content", className= "card-text")),
@@ -73,8 +73,8 @@ def render_tab_content(tab_value, data):
                              'display': 'flex', 'flex-direction': 'column', 'align-items': 'flex-start',
                              'backgroundColor': 'white', 'border-radius': '5px', 'margin-top': '0.5rem'}),
                     html.Div(id = 'county-store-2', children = [
-                        dcc.Dropdown(id = 'county-dropdown-2', options = county_options, value = county_options[0]['value'], style = {'width': '20vw', 'margin-left': '0.8rem', 'margin-top': '0.5rem'}),
-                        html.Div(id = 'county-store-2-content', style = {'order':'2', 'width': '41vw', 'height': '57vh', 'border-radius': '5px', 'margin-left': '0.5rem', 'margin-top': '0.5rem'})
+                        dcc.Dropdown(id = 'county-dropdown-2', options = county_options, value = county_options[1]['value'], style = {'width': '20vw', 'margin-left': '0.8rem', 'margin-top': '0.5rem', 'z-index': '1000'}),
+                        html.Div(id = 'county-store-2-content', style = {'order':'2', 'width': '41vw', 'height': '57vh', 'border-radius': '5px', 'margin-left': '0.5rem', 'margin-top': '0.5rem', 'z-index': '1'})
                     ],
                     style = {'order': '2', 'width': '42vw', 'height': '65vh', 'margin': 'auto',
                              'display': 'flex', 'flex-direction': 'column', 'align-items': 'flex-start',
@@ -96,8 +96,8 @@ def render_tab_content(tab_value, data):
                              'display': 'flex', 'flex-direction': 'column', 'align-items': 'flex-start',
                              'backgroundColor': 'white', 'border-radius': '5px', 'margin-top': '0.5rem'}),
                     html.Div(id = 'specific-store-2', children = [
-                        dcc.Dropdown(id = 'specific-dropdown-2', options = store_options, value = store_options[0]['value'], style = {'width': '30vw', 'margin-left': '0.8rem', 'margin-top': '0.5rem'}),
-                        html.Div(id = 'specific-store-2-content', style = {'order':'2', 'width': '41vw', 'height': '57vh', 'border-radius': '5px', 'margin-left': '0.5rem', 'margin-top': '0.5rem'})
+                        dcc.Dropdown(id = 'specific-dropdown-2', options = store_options, value = store_options[0]['value'], style = {'width': '30vw', 'margin-left': '0.8rem', 'margin-top': '0.5rem', 'z-index': '1000'}),
+                        html.Div(id = 'specific-store-2-content', style = {'order':'2', 'width': '41vw', 'height': '57vh', 'border-radius': '5px', 'margin-left': '0.5rem', 'margin-top': '0.5rem', 'z-index': '1'})
                     ],
                     style = {'order': '2', 'width': '42vw', 'height': '65vh', 'margin': 'auto',
                              'display': 'flex', 'flex-direction': 'column', 'align-items': 'flex-start',
@@ -112,8 +112,8 @@ def render_tab_content(tab_value, data):
           Input('store-data', 'data')
 )
 def render_iowa_store(tab, data):
-    df = pd.DataFrame(data)
     if tab == 'iowa':
+        df = pd.DataFrame(data)
         iowa_store = df.groupby(['store_number', 'store_name'], as_index=False).sum()[['store_number', 'store_name', 'profit']].sort_values(by = 'profit', ascending = False).head(2)
         store_name_1 = iowa_store.iloc[0]['store_name']
         store_number_1 = iowa_store.iloc[0]['store_number']
@@ -126,7 +126,7 @@ def render_iowa_store(tab, data):
                     html.Div([
                         html.H3(f'{store_name_1}', style = {'order':'1', 'color': 'black', 'text-align': 'left', 'margin-top': '1rem', 'margin-left': '1rem'}),
                         html.H5(f'Store number: {store_number_1}', style = {'order':'2', 'color': 'black', 'text-align': 'left', 'margin-top': '0.5rem', 'margin-left': '1rem'}),
-                        radioitems,
+                        #radioitems,
                     ], style = {'order':'1', 'display': 'flex', 'flex-direction': 'column', 'align-items': 'flex-start', 'width': '22vw', 'height': '20vh', 'margin-right': '2rem'}),
                     dcc.Graph(id = 'dist-plot-1', style = {'order': '2', 'margin-bottom': '1rem', 'margin-right': '1rem'})
                 ], style = {'display': 'flex', 'flex-direction': 'row', 'align-items': 'center', 'width': '42vw', 'height': '20vh'}),
@@ -138,7 +138,7 @@ def render_iowa_store(tab, data):
                     html.Div([
                         html.H3(f'{store_name_2}', style = {'order':'1', 'color': 'black', 'text-align': 'left', 'margin-top': '1rem', 'margin-left': '1rem'}),
                         html.H5(f'Store number: {store_number_2}', style = {'order':'2', 'color': 'black', 'text-align': 'left', 'margin-top': '0.5rem', 'margin-left': '1rem'}),
-                        radioitems,
+                        #radioitems,
                     ], style = {'order':'1', 'display': 'flex', 'flex-direction': 'column', 'align-items': 'flex-start', 'width': '22vw', 'height': '20vh', 'margin-right': '2rem'}),
                     dcc.Graph(id = 'dist-plot-2', style = {'order': '2', 'margin-bottom': '1rem', 'margin-right': '1rem'})
                 ], style = {'display': 'flex', 'flex-direction': 'row', 'align-items': 'center', 'width': '42vw', 'height': '20vh'}),
@@ -150,88 +150,98 @@ def render_iowa_store(tab, data):
 
 @callback(Output('county-store-1-content', 'children'),
          Input('county-dropdown-1', 'value'),
-         Input('county-dropdown-2', 'value'),
          Input('store-data', 'data')
 )
-def render_county_store_1(county1, county2, data):
+def render_county_store_1(county1, data):
     df = pd.DataFrame(data)
     df_1 = df[df['county'] == county1].groupby(['store_number', 'store_name'], as_index=False).sum()[['store_number', 'store_name', 'profit']].sort_values(by = 'profit', ascending = False).head(1)
-    df_2 = df[df['county'] == county2].groupby(['store_number', 'store_name'], as_index=False).sum()[['store_number', 'store_name', 'profit']].sort_values(by = 'profit', ascending = False).head(1)
     store_name_1 = df_1.iloc[0]['store_name']
     store_number_1 = df_1.iloc[0]['store_number']
-    store_name_2 = df_2.iloc[0]['store_name']
-    store_number_2 = df_2.iloc[0]['store_number']
     return html.Div([
-            dcc.Store(id = 'county-infos', data = {'store_name_1': store_name_1, 'store_number_1': store_number_1, 'store_name_2': store_name_2, 'store_number_2': store_number_2}),
+            dcc.Store(id = 'county-infos-1', data = {'store_name_1': store_name_1, 'store_number_1': store_number_1}),
             html.Div([
                 html.Div([
                     html.Div([
                         html.H3(f'{store_name_1}', style = {'order':'1', 'color': 'black', 'text-align': 'left', 'margin-top': '1rem', 'margin-left': '1rem'}),
                         html.H5(f'Store number: {store_number_1}', style = {'order':'2', 'color': 'black', 'text-align': 'left', 'margin-top': '0.5rem', 'margin-left': '1rem'}),
-                        radioitems,
+                        #radioitems,
                     ], style = {'order':'1', 'display': 'flex', 'flex-direction': 'column', 'align-items': 'flex-start', 'width': '22vw', 'height': '20vh', 'margin-right': '2rem'}),
-                    dcc.Graph(id = 'dist-plot-3', style = {'order': '2', 'margin-bottom': '1rem', 'margin-right': '1rem'})
+                    dcc.Graph(id = 'dist-plot-3', style = {'order': '2', 'margin-right': '1rem'})
                 ], style = {'display': 'flex', 'flex-direction': 'row', 'align-items': 'center', 'width': '42vw', 'height': '20vh', 'margin-left': '0rem'}),
-                dcc.Graph(id = 'county-store-1-cum', style = {'margin-left': '1rem', 'margin-top': '1rem'})
+                dcc.Graph(id = 'county-store-1-cum', style = {'margin-left': '1rem', 'margin-top': '-0.5rem'})
                 ], style = {'order': '1', 'width': '42vw', 'height': '60vh', 'margin': 'auto', 'margin-left': '0rem',
-                            'border-radius': '5px', 'margin-top': '0rem'}),
-            html.Div([
+                            'border-radius': '5px', 'margin-top': '0rem'})])
+
+@callback(Output('county-store-2-content', 'children'),
+         Input('county-dropdown-2', 'value'),
+         Input('store-data', 'data')
+)
+def render_county_store_2(county2, data):
+    df = pd.DataFrame(data)
+    df_2 = df[df['county'] == county2].groupby(['store_number', 'store_name'], as_index=False).sum()[['store_number', 'store_name', 'profit']].sort_values(by = 'profit', ascending = False).head(1)
+    store_name_2 = df_2.iloc[0]['store_name']
+    store_number_2 = df_2.iloc[0]['store_number']
+    return html.Div([
+                dcc.Store(id = 'county-infos-2', data = {'store_name_2': store_name_2, 'store_number_2': store_number_2}),
                 html.Div([
                     html.Div([
                         html.H3(f'{store_name_2}', style = {'order':'1', 'color': 'black', 'text-align': 'left', 'margin-top': '1rem', 'margin-left': '1rem'}),
                         html.H5(f'Store number: {store_number_2}', style = {'order':'2', 'color': 'black', 'text-align': 'left', 'margin-top': '0.5rem', 'margin-left': '1rem'}),
-                        radioitems,
+                        #radioitems,
                     ], style = {'order':'1', 'display': 'flex', 'flex-direction': 'column', 'align-items': 'flex-start', 'width': '22vw', 'height': '20vh', 'margin-right': '2rem', 'z-index': '1000'}),
-                    dcc.Graph(id = 'dist-plot-4', style = {'order': '2', 'margin-bottom': '1rem', 'margin-right': '1rem'})
+                    dcc.Graph(id = 'dist-plot-4', style = {'order': '2', 'margin-right': '1rem'})
                 ], style = {'display': 'flex', 'flex-direction': 'row', 'align-items': 'center', 'width': '42vw', 'height': '20vh', 'margin-left': '0rem'}),
-                dcc.Graph(id = 'county-store-2-cum', style = {'margin-left': '1rem', 'margin-top': '1rem'})
+                dcc.Graph(id = 'county-store-2-cum', style = {'margin-left': '1rem', 'margin-top': '-0.5rem'})
             ], style = {'order': '2', 'width': '42vw', 'height': '60vh', 'margin': 'auto', 'margin-left': '0rem',
                         'border-radius': '5px', 'margin-top': '0rem'})
-            ], style = {'display': 'flex', 'flex-direction': 'row', 'align-items': 'center', 'margin': 'auto',
-                        'justify-content': 'space-between', 'width': '88vw', 'height': '62vh'})
 
 @callback(Output('specific-store-1-content', 'children'),
          Input('specific-dropdown-1', 'value'),
-         Input('specific-dropdown-2', 'value'),
          Input('store-data', 'data')
 )
-def render_county_store_1(store1, store2, data):
+def render_county_store_1(store1, data):
     df = pd.DataFrame(data)
     store_name_1 = df[df['store_number']== store1]['store_name'].unique()[0]
-    store_name_2 = df[df['store_number']== store2]['store_name'].unique()[0]
     return html.Div([
-            dcc.Store(id = 'specific-store-infos', data = {'store_name_1': store_name_1, 'store_number_1': store1, 'store_name_2': store_name_2, 'store_number_2': store2}),
+            dcc.Store(id = 'specific-store-infos-1', data = {'store_name_1': store_name_1, 'store_number_1': store1}),
             html.Div([
                 html.Div([
                     html.Div([
                         html.H3(f'{store_name_1}', style = {'order':'1', 'color': 'black', 'text-align': 'left', 'margin-top': '1rem', 'margin-left': '1rem'}),
                         html.H5(f'Store number: {store1}', style = {'order':'2', 'color': 'black', 'text-align': 'left', 'margin-top': '0.5rem', 'margin-left': '1rem'}),
-                        radioitems,
+                        #radioitems,
                     ], style = {'order':'1', 'display': 'flex', 'flex-direction': 'column', 'align-items': 'flex-start', 'width': '22vw', 'height': '20vh', 'margin-right': '2rem'}),
-                    dcc.Graph(id = 'dist-plot-5', style = {'order': '2', 'margin-bottom': '1rem', 'margin-right': '1rem'})
+                    dcc.Graph(id = 'dist-plot-5', style = {'order': '2', 'margin-bottom': '0.5rem', 'margin-right': '1rem'})
                 ], style = {'display': 'flex', 'flex-direction': 'row', 'align-items': 'center', 'width': '42vw', 'height': '20vh', 'margin-left': '0rem'}),
-                dcc.Graph(id = 'specific-1-cum', style = {'margin-left': '1rem', 'margin-top': '1rem'})
+                dcc.Graph(id = 'specific-1-cum', style = {'margin-left': '1rem'})
                 ], style = {'order': '1', 'width': '42vw', 'height': '60vh', 'margin': 'auto', 'margin-left': '0rem',
-                            'border-radius': '5px', 'margin-top': '-0.5rem'}),
-            html.Div([
+                            'border-radius': '5px', 'margin-top': '-0.5rem'})])
+
+@callback(Output('specific-store-2-content', 'children'),
+         Input('specific-dropdown-2', 'value'),
+         Input('store-data', 'data')
+)
+def render_county_store_1(store2, data):
+    df = pd.DataFrame(data)
+    store_name_2 = df[df['store_number']== store2]['store_name'].unique()[0]
+    return html.Div([
+            dcc.Store(id = 'specific-store-infos-2', data = {'store_name_2': store_name_2, 'store_number_2': store2}),
                 html.Div([
                     html.Div([
                         html.H3(f'{store_name_2}', style = {'order':'1', 'color': 'black', 'text-align': 'left', 'margin-top': '1rem', 'margin-left': '1rem'}),
                         html.H5(f'Store number: {store2}', style = {'order':'2', 'color': 'black', 'text-align': 'left', 'margin-top': '0.5rem', 'margin-left': '1rem'}),
-                        radioitems,
+                        #radioitems,
                     ], style = {'order':'1', 'display': 'flex', 'flex-direction': 'column', 'align-items': 'flex-start', 'width': '22vw', 'height': '20vh', 'margin-right': '2rem', 'z-index': '1000'}),
-                    dcc.Graph(id = 'dist-plot-6', style = {'order': '2', 'margin-bottom': '1rem', 'margin-right': '1rem'})
+                    dcc.Graph(id = 'dist-plot-6', style = {'order': '2', 'margin-bottom': '0.5rem', 'margin-right': '1rem'})
                 ], style = {'display': 'flex', 'flex-direction': 'row', 'align-items': 'center', 'width': '42vw', 'height': '20vh', 'margin-left': '0rem'}),
-                dcc.Graph(id = 'specific-2-cum', style = {'margin-left': '1rem', 'margin-top': '1rem'})
+                dcc.Graph(id = 'specific-2-cum', style = {'margin-left': '1rem'})
             ], style = {'order': '2', 'width': '42vw', 'height': '60vh', 'margin': 'auto', 'margin-left': '0rem',
                         'border-radius': '5px', 'margin-top': '-0.5rem'})
-            ], style = {'display': 'flex', 'flex-direction': 'row', 'align-items': 'center', 'margin': 'auto',
-                        'justify-content': 'space-between', 'width': '88vw', 'height': '62vh'})
 
 @callback(Output('county-store-1-cum', 'figure'),
           Input('county-dropdown-1', 'value'),
           Input('store-data', 'data'),
-          Input('county-infos', 'data')
+          Input('county-infos-1', 'data')
 )
 def render_cum_graph(county, data, store_data):
     df = pd.DataFrame(data)
@@ -249,7 +259,7 @@ def render_cum_graph(county, data, store_data):
 @callback(Output('county-store-2-cum', 'figure'),
           Input('county-dropdown-2', 'value'),
           Input('store-data', 'data'),
-          Input('county-infos', 'data')
+          Input('county-infos-2', 'data')
 )
 def render_cum_graph(county, data, store_data):
     df = pd.DataFrame(data)
@@ -355,7 +365,7 @@ def render_cum_graph(data, store_data):
 @callback(Output('dist-plot-3', 'figure'),
           Input('county-dropdown-1', 'value'),
           Input('store-data', 'data'),
-          Input('county-infos', 'data')
+          Input('county-infos-1', 'data')
 )
 def render_cum_graph(county, data, store_data):
     df = pd.DataFrame(data)
@@ -369,7 +379,7 @@ def render_cum_graph(county, data, store_data):
 @callback(Output('dist-plot-4', 'figure'),
           Input('county-dropdown-2', 'value'),
           Input('store-data', 'data'),
-          Input('county-infos', 'data')
+          Input('county-infos-2', 'data')
 )
 def render_cum_graph(county, data, store_data):
     df = pd.DataFrame(data)
