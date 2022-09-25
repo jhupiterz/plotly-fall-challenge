@@ -3,9 +3,9 @@ import plotly.express as px
 import plotly.graph_objects as go
 import utils
 
-def choropleth_map(df, geojson, center, metric):
+def choropleth_map(df, geojson, center, metric, color_scale):
     fig = px.choropleth_mapbox(df, geojson=geojson, locations='full_fips', color=metric,
-                            color_continuous_scale="Viridis",
+                            color_continuous_scale=color_scale,
                             range_color=(0, df[metric].max()),
                             mapbox_style='stamen-toner',
                             zoom=6, center = {"lat": center[0], "lon": center[1]},
@@ -29,10 +29,13 @@ def bar_chart(df):
         title_x = 0.5)
     return fig
 
-def cum_sales(df, county=False):
+def cum_sales(df, county=False, custom=False):
     if county == False:
         width = 610
         height = 360
+    elif custom == True:
+        width = 500
+        height = 250
     else: 
         width = 590
         height = 340
