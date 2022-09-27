@@ -24,3 +24,27 @@ def get_metric_labels(metric):
         return 'Sales ($)'
     else:
         return 'Volume (L)'
+
+def human_format(num):
+    magnitude = 0
+    while abs(num) >= 1000:
+        magnitude += 1
+        num /= 1000.0
+    # add more suffixes if you need them
+    return '%.2f%s' % (num, ['', 'K', 'M', 'G', 'T', 'P'][magnitude])
+
+def map_weekdays(x):
+    if x == 0:
+        return "Sunday"
+    elif x == 1:
+        return "Monday"
+    elif x == 2:
+        return "Tuesday"
+    elif x == 3:
+        return "Wednesday"
+    elif x == 4:
+        return "Thursday"
+    elif x == 5:
+        return "Friday"
+    elif x == 6:
+        return "Saturday"

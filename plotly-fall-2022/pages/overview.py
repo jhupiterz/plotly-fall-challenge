@@ -47,7 +47,7 @@ def update_map(data, counties, category, metric):
         grouped_df = df.groupby(['full_fips', 'county'], as_index=False).sum()[['full_fips', 'county', 'benefit']]
     elif metric == 'volume_sold_liters':
         grouped_df = df.groupby(['full_fips', 'county'], as_index=False).sum()[['full_fips', 'county', 'volume_sold_liters']]
-    fig = plots.choropleth_map(grouped_df, counties, map_center, metric)
+    fig = plots.choropleth_map(grouped_df, counties, map_center, metric, 'viridis')
     return fig
 
 @callback(Output('category', 'options'),
