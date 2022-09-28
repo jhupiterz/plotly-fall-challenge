@@ -28,14 +28,14 @@ sidebar = html.Div(
         dbc.Nav(
             [
                 dbc.NavLink(
-                    [html.I(className="fas fa-home me-2"), html.Span("Overview")],
+                    [html.I(className="fas fa-home me-2"), html.Span("Counties overview")],
                     href="/",
                     active="exact",
                 ),
                 dbc.NavLink(
                     [
                         html.I(className="fas fa-pie-chart me-2"),
-                        html.Span("In-depth"),
+                        html.Span("Cumulative sales"),
                     ],
                     href="/analysis",
                     active="exact",
@@ -43,7 +43,7 @@ sidebar = html.Div(
                 dbc.NavLink(
                     [
                         html.I(className="fas fa-magic me-2"),
-                        html.Span("Make your own"),
+                        html.Span("More dashboards"),
                     ],
                     href="/custom",
                     active="exact",

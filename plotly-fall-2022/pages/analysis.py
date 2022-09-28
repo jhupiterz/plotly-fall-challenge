@@ -27,7 +27,7 @@ radioitems = html.Div(
 layout = html.Div([
 
     html.Div([
-        html.H1(['Iowa Liquor Sales',html.Br(),'2021 Store Analytics'], style = {'order':'1', 'color': '#a4e57a', 'margin-top': '2rem', 'text-align': 'left'}),
+        html.H1(['Iowa Liquor Sales',html.Br(),'2021 Cumulative Sales'], style = {'order':'1', 'color': 'black', 'margin-top': '2rem', 'text-align': 'left'}),
         dbc.Card(
             [
                 dbc.CardHeader(
@@ -46,7 +46,7 @@ layout = html.Div([
             ], style = {'order':'2', 'margin-top': '2rem', 'padding': '0px'})
         ], style = {'order':'1', 'height': '80vh', 'width': '50vw', 'display': 'flex', 'flex-direction': 'column', 'align-items': 'flex-start', 'margin-left': '7rem', 'padding': '0px'}),
     
-    ], style = {'width': '100vw', 'height': '100vh', 'backgroundColor': '#5e17eb', 'display': 'flex',
+    ], style = {'width': '100vw', 'height': '100vh', 'backgroundColor': 'rgba(94, 23, 235, 0.2)', 'display': 'flex',
                 'flex-direction': 'row', 'align-items': 'flex-start', 'justify-content': 'space-between'})
 
 @callback(Output('card-content', 'children'),
@@ -59,7 +59,7 @@ def render_tab_content(tab_value, data):
     store_options = [{'label': i, 'value': i} for i in df['store_number'].unique()]
     if tab_value == 'iowa':
         return html.Div([
-            html.Div(id = 'iowa-store', style = {'width': '88vw', 'height': '67vh', 'backgroundColor': 'rgba(164, 229, 122, 0.5)', 'border-radius': '5px'})
+            html.Div(id = 'iowa-store', style = {'width': '88vw', 'height': '67vh', 'border-radius': '5px'})
             ])
     elif tab_value == 'county':
         return html.Div([
@@ -82,7 +82,7 @@ def render_tab_content(tab_value, data):
                     ], style = {'display': 'flex', 'flex-direction': 'row', 'align-items': 'center', 'margin': 'auto',
                                 'justify-content': 'space-between', 'width': '88vw', 'height': '65vh'})
             ],
-            style = {'width': '88vw', 'height': '67vh', 'backgroundColor': 'rgba(164, 229, 122, 0.5)', 'border-radius': '5px'})
+            style = {'width': '88vw', 'height': '67vh', 'border-radius': '5px'})
             ])
     else:
         return html.Div([
@@ -104,7 +104,7 @@ def render_tab_content(tab_value, data):
                              'backgroundColor': 'white', 'border-radius': '5px', 'margin-top': '0.5rem'})
                     ], style = {'display': 'flex', 'flex-direction': 'row', 'align-items': 'center', 'margin': 'auto',
                                 'justify-content': 'space-between', 'width': '88vw', 'height': '65vh'})
-            ], style = {'width': '88vw', 'height': '67vh', 'backgroundColor': 'rgba(164, 229, 122, 0.5)', 'border-radius': '5px'})
+            ], style = {'width': '88vw', 'height': '67vh', 'border-radius': '5px'})
             ])
 
 @callback(Output('iowa-store', 'children'),

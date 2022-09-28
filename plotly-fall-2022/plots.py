@@ -19,6 +19,31 @@ def map_weekdays(x):
         return "Saturday"
     return "Sunday"
 
+def map_months(x):
+    if x == 1:
+        return "January"
+    elif x == 2:
+        return "February"
+    elif x == 3:
+        return "March"
+    elif x == 4:
+        return "April"
+    elif x == 5:
+        return "May"
+    elif x == 6:
+        return "June"
+    elif x == 7:
+        return "July"
+    elif x == 8:
+        return "August"
+    elif x == 9:
+        return "September"
+    elif x == 10:
+        return "October"
+    elif x == 11:
+        return "November"
+    return "December"
+
 def choropleth_map(df, geojson, center, metric, color_scale):
     fig = px.choropleth_mapbox(df, geojson=geojson, locations='full_fips', color=metric,
                             color_continuous_scale=color_scale,
@@ -33,7 +58,8 @@ def choropleth_map(df, geojson, center, metric, color_scale):
     return fig
 
 def bar_chart(df):
-    fig = px.bar(df, x='category_name', y='benefit', width = 520, height = 320)
+    fig = px.bar(df, x='category_name', y='benefit', text= 'benefit', width = 250, height = 320)
+    fig.update_traces(texttemplate='%{text:.2s}', textposition='inside')
     fig.update_yaxes(visible=False)
     fig.update_xaxes(title='')
     fig.update_layout(
@@ -48,7 +74,7 @@ def bar_chart(df):
 def cum_sales(df, county=False, custom=False):
     if county == False:
         width = 610
-        height = 360
+        height = 340
     elif custom == True:
         width = 500
         height = 250
@@ -86,7 +112,7 @@ def cum_sales(df, county=False, custom=False):
     return fig
 
 def dist_plot(df, profit):
-    fig = px.violin(df, x='profit', log_x=True, width=300, height=200)
+    fig = px.violin(df, x='profit', log_x=True, width=300, height=180)
     fig.update_xaxes(range=[0, 5.5])
     fig.add_vline(x=profit, line_width=2, line_dash="dash", line_color="#ba1e7f")
     fig.update_layout(
@@ -120,8 +146,23 @@ def waterfall_chart(df):
 def weekday_pie_chart(df):
     df['weekday'] = [x.weekday() for x in df.date]
     df['weekday'] = df['weekday'].apply(map_weekdays)
-    df_to_pie = df.groupby('weekday', as_index=False).count()[['weekday', 'invoice_and_item_number']]
-    fig = px.pie(df_to_pie, values='invoice_and_item_number', names='weekday', hole=0.5)
+    df_to_pie = df.groupby('weekday', as_index=False).sum()[['weekday', 'profit']]
+    fig = px.pie(df_to_pie, values='profit', names='weekday', hole=0.5)
+    fig.update_traces(textposition='inside', textinfo='percent+label')
+    fig.update_layout(
+        width = 200,
+        paper_bgcolor='rgba(0, 0, 0, 0)',
+        plot_bgcolor='rgba(0, 0, 0, 0)',
+        showlegend = False,
+        margin=dict(l=0, r=0, t=0, b=0)
+    )
+    return fig
+
+def month_pie_chart(df):
+    df['month'] = df.date.dt.month
+    df['month'] = df['month'].apply(map_months)
+    df_to_pie = df.groupby('month', as_index=False).count()[['month', 'invoice_and_item_number']]
+    fig = px.pie(df_to_pie, values='invoice_and_item_number', names='month', hole=0.5)
     fig.update_traces(textposition='inside', textinfo='percent+label')
     fig.update_layout(
         width = 200,
@@ -163,7 +204,7 @@ def monthly_waterfall(df):
                         connector = {"line":{"color":"rgb(63, 63, 63)"}},
                     ))
     fig.update_layout(
-        width = 800,
+        width = 1350,
         height = 280,
         paper_bgcolor='rgba(0, 0, 0, 0)',
         plot_bgcolor='rgba(0, 0, 0, 0)',
@@ -179,29 +220,47 @@ def monthly_waterfall(df):
     fig.update_yaxes(title_text="USD")
     return fig
 
-def line_chart_invoices(df):
+def line_chart_invoices(df, counties):
     df = df.sort_values('date', ascending=True).set_index('date')
     df_sorted = df.groupby(pd.Grouper(freq="D")).count()[['invoice_and_item_number']]
+    df_sorted['invoice_mean'] = df_sorted.invoice_and_item_number/df.county.nunique()
     df_sorted = df_sorted.reset_index()
     df_sorted['weekday'] = [x.weekday() for x in df_sorted.date]
+    df_to_plot = df_sorted[(df_sorted['weekday'] != 5) & (df_sorted['weekday'] != 6)]
     v_lines = ["2020-12-31","2021-01-31","2021-02-28","2021-03-31","2021-04-30","2021-05-31",
                "2021-06-30","2021-07-31","2021-08-31","2021-09-30","2021-10-31","2021-11-30"]
     tick_vals = ["2020-12-15","2021-01-15","2021-02-15","2021-03-15","2021-04-15","2021-05-15",
                  "2021-06-15","2021-07-15","2021-08-15","2021-09-15","2021-10-15","2021-11-15"]
-    fig = px.line(df_sorted[(df_sorted['weekday'] != 5) & (df_sorted['weekday'] != 6)], x='date', y='invoice_and_item_number',
+    fig = px.line(df_to_plot, x='date', y='invoice_mean',
               labels=dict(date="", invoice_and_item_number="Number of invoices"))
+    if counties:
+        for county in counties:
+            df_county_sorted = df[df['county'] == county].groupby(pd.Grouper(freq="D")).count()[['invoice_and_item_number']]
+            df_county_sorted = df_county_sorted.reset_index()
+            df_county_sorted['weekday'] = [x.weekday() for x in df_county_sorted.date]
+            df_county_to_plot = df_county_sorted[(df_county_sorted['weekday'] != 5) & (df_county_sorted['weekday'] != 6)]
+            fig.add_trace(go.Scatter(x=df_county_to_plot["date"],
+                                     y=df_county_to_plot["invoice_and_item_number"],
+                                     name= county, mode='lines'))
     for v_line in v_lines:
         fig.add_vline(x=v_line, line_width=1, line_dash="dash", line_color="black")
     fig.update_xaxes(tickvals=tick_vals,
                     ticktext=["Dec. 2020", "Jan. 2021", "Feb. 2021", "Mar. 2021",
                             "Apr. 2021", "May. 2021", "Jun. 2021", "Jul. 2021",
                             "Aug. 2021", "Sep. 2021", "Oct. 2021", "Nov. 2021"])
+    fig.update_yaxes(title_text="Number of invoices")
     fig.update_layout(
-        width = 800,
+        width = 1350,
         height = 280,
+        hovermode="x unified",
+        hoverlabel=dict(
+            bgcolor="white",
+            font_size=14,
+            font_family="Rockwell"
+        ),
         paper_bgcolor='rgba(0, 0, 0, 0)',
         plot_bgcolor='rgba(0, 0, 0, 0)',
-        showlegend = False,
+        showlegend = True,
         margin=dict(l=0, r=0, t=0, b=0)
     )
     return fig

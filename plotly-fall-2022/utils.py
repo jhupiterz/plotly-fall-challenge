@@ -20,8 +20,10 @@ def get_category_options(df):
 def get_metric_labels(metric):
     if metric == 'invoice_and_item_number':
         return 'Total invoices'
-    elif metric == 'sale_dollars':
+    elif metric == 'benefit':
         return 'Sales ($)'
+    elif metric == 'profit':
+        return 'Profit ($)'
     else:
         return 'Volume (L)'
 
