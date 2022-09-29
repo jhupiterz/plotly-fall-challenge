@@ -58,7 +58,7 @@ def choropleth_map(df, geojson, center, metric, color_scale):
     return fig
 
 def bar_chart(df):
-    fig = px.bar(df, x='category_name', y='benefit', text= 'benefit', width = 250, height = 320)
+    fig = px.bar(df, x='category_name', y='benefit', text= 'benefit', width = 250, height = 340)
     fig.update_traces(texttemplate='%{text:.2s}', textposition='inside')
     fig.update_yaxes(visible=False)
     fig.update_xaxes(title='')
@@ -162,7 +162,7 @@ def month_pie_chart(df):
     df['month'] = df.date.dt.month
     df['month'] = df['month'].apply(map_months)
     df_to_pie = df.groupby('month', as_index=False).count()[['month', 'invoice_and_item_number']]
-    fig = px.pie(df_to_pie, values='invoice_and_item_number', names='month', hole=0.5)
+    fig = px.pie(df_to_pie, values='invoice_and_item_number', names='month', hole=0.4)
     fig.update_traces(textposition='inside', textinfo='percent+label')
     fig.update_layout(
         width = 200,

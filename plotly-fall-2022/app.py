@@ -1,3 +1,4 @@
+from anyio import aclose_forcefully
 import pandas as pd
 import utils, plots
 
@@ -7,6 +8,7 @@ import dash_bootstrap_components as dbc
 
 app = dash.Dash(
     __name__, suppress_callback_exceptions = True, use_pages=True,
+    external_scripts=["https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.2/dragula.min.js"],
     external_stylesheets=[dbc.themes.BOOTSTRAP, dbc.icons.FONT_AWESOME],
     meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1", 'charSet':'“UTF-8”'}])
 
@@ -19,8 +21,8 @@ sidebar = html.Div(
             [
                 # width: 3rem ensures the logo is the exact width of the
                 # collapsed sidebar (accounting for padding)
-                html.Img(src="assets/bottle_logo.png", style={"width": "5.5rem", 'margin-left': '-1.2vw'}),
-                html.H2("Cheers!", style={'margin-left': '0.5vw'}),
+                html.Img(src="assets/bottle_logo.png", style={"width": "5.8rem", 'margin-left': '-1.5vw'}),
+                html.H2("Cheers!", style={'margin-left': '-0.5vw'}),
             ],
             className="sidebar-header",
         ),
@@ -28,33 +30,44 @@ sidebar = html.Div(
         dbc.Nav(
             [
                 dbc.NavLink(
-                    [html.I(className="fas fa-home me-2"), html.Span("Counties overview")],
+                    [
+                        html.I(className="fas fa-eye me-2", **{'aria-hidden': 'true'}, style = {'margin-right': '0.2vw'}),
+                        html.Span("Counties overview")
+                    ],
                     href="/",
-                    active="exact",
+                    active="exact"
                 ),
                 dbc.NavLink(
                     [
-                        html.I(className="fas fa-pie-chart me-2"),
+                        html.I(className="fa fa-usd me-2"),
                         html.Span("Cumulative sales"),
                     ],
-                    href="/analysis",
-                    active="exact",
+                    href="/sales",
+                    active="exact"
                 ),
                 dbc.NavLink(
                     [
-                        html.I(className="fas fa-magic me-2"),
-                        html.Span("More dashboards"),
+                        html.I(className="fa fa-thermometer-half me-2"),
+                        html.Span("Profit and Loss"),
                     ],
-                    href="/custom",
-                    active="exact",
+                    href="/profits",
+                    active="exact"
+                ),
+                dbc.NavLink(
+                    [
+                        html.I(className="fa fa-bar-chart me-2"),
+                        html.Span("Time series"),
+                    ],
+                    href="/timeseries",
+                    active="exact"
                 ),
                 dbc.NavLink(
                     [
                         html.I(className="fas fa-info-circle me-2"),
-                        html.Span("Info"),
+                        html.Span("Info")
                     ],
-                    n_clicks=0,
-                ),
+                    n_clicks=0
+                )
             ],
             vertical=True,
             pills=True,

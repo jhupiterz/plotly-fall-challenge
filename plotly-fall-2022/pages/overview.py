@@ -2,10 +2,10 @@ import pandas as pd
 import utils, plots
 
 import dash
-from dash import dcc, html, Input, Output, callback
+import dash_bootstrap_components as dbc
+from dash import dcc, html, Input, Output, callback, clientside_callback, ClientsideFunction
 
 dash.register_page(__name__, path='/')
-
 
 map_center = [42.036, -93.46505]
 
@@ -27,7 +27,7 @@ layout = html.Div([
         html.Div(id = 'top-buyer', style = {'order': '2', 'margin-bottom': '2rem', 'backgroundColor': 'white', 'border-radius': '5px', 'width': '540px'}),
         html.Div(id = 'top-vendor', style = {'order': '3', 'margin-bottom': '2rem', 'backgroundColor': 'white', 'border-radius': '5px', 'width': '540px'}),
         html.Div(id = 'top-item', style = {'order': '4', 'margin-bottom': '2rem', 'backgroundColor': 'white', 'border-radius': '5px', 'width': '540px'}),
-        html.Div(id = 'hover-bar-chart', children = [], style = {'order': '6'})],
+        html.Div(id = 'hover-bar-chart', children = [], style = {'order': '6', 'display': 'flex', 'flex-direction': 'row'})],
         style = {'order':'2', 'height': '80vh', 'width': '35vw', 'display': 'flex', 'flex-direction': 'column', 'align-items': 'center', 'justify-content': 'flex-end', 'margin-right': '2.3rem', 'margin-top': '8.6vh'})
 
 ], style = {'width': '100vw', 'height': '100vh', 'backgroundColor': 'rgba(94, 23, 235, 0.2)', 'display': 'flex', 'flex-direction': 'row', 'align-items': 'flex-start', 'justify-content': 'space-between'})
@@ -68,16 +68,28 @@ def create_bar_chart(hoverData, data):
         fig_2 = plots.month_pie_chart(df)
         df_to_plot = df[df['full_fips'] == FIPS].groupby('category_name', as_index=False).sum()[['category_name', 'benefit', 'volume_sold_liters']].sort_values('benefit', ascending=False).head(3)
         fig_1 = plots.bar_chart(df_to_plot)
-        return html.Div([
-            html.Div([
-            html.H2('Top categories (USD)', style = {'order': '5', 'color': 'black', 'margin-bottom': '1rem', 'font-size': '28px'}),
-            dcc.Graph(figure=fig_1, style = {'backgroundColor': 'white', 'border-radius': '5px', 'width': '280px', 'height': '310px', 'padding': '5px'})
-            ], style = {'order': '1'}),
-            html.Div([
-                html.H2('Sales per month', style = {'color': 'black', 'margin-bottom': '0.5rem', 'font-size': '28px', 'margin-left': '1.7vw'}),
-                dcc.Graph(figure=fig_2, style = {'width': '260px', 'height': '310px', 'padding': '5px'})
-            ], style = {'order': '2', 'margin-left': '0.5vw'})],
-            style = {'display': 'flex', 'flex-direction': 'row', 'align-items': 'center', 'justify-content': 'center'})
+        return html.Div(id = 'drag-container-1', className = 'container',  children = [
+                html.Div(id = 'drag-container-2', className = 'container',  children = [
+                    dbc.Card([
+                        dbc.CardHeader("🌀  Top Categories ($)", style = {'font-size': '24px'}),
+                        dbc.CardBody(
+                            dcc.Graph(figure=fig_1, style = {'width': '10vw', 'height': '15vh', 'margin-left': '-1vw', 'margin-top': '-5vh'})
+                        ),
+                    ], style = {'height': '40vh', 'width': '18vw', 'margin-right': '0.5vw', 'margin-left': '0.5vw'}),
+                    dbc.Card([
+                        dbc.CardHeader("🌀  Sales per month", style = {'font-size': '24px'}),
+                        dbc.CardBody(
+                            dcc.Graph(figure=fig_2, style = {'width': '15vw', 'height': '30vh', 'margin-top': 0})
+                        ),
+                    ], style = {'height': '40vh', 'width': '18vw', 'margin-right': '0.5vw', 'margin-left': '0.5vw'}),
+                    # html.H2('Top categories (USD)', style = {'order': '5', 'color': 'black', 'margin-bottom': '1rem', 'font-size': '28px'}),
+                    # dcc.Graph(figure=fig_1, style = {'backgroundColor': 'white', 'border-radius': '5px', 'width': '280px', 'height': '310px', 'padding': '5px'})
+                    ], style = {'display': 'flex', 'flex-direction': 'row', 'align-items': 'center', 'width': '38vw', 'height': '40vh', 'margin-right': '1.5vw'}),
+                    # html.Div([
+                    #     html.H2('Sales per month', style = {'color': 'black', 'margin-bottom': '0.5rem', 'font-size': '28px', 'margin-left': '1.7vw'}),
+                    #     dcc.Graph(figure=fig_2, style = {'width': '260px', 'height': '310px', 'padding': '5px'})
+                    ], style = {'order': '2', 'display': 'flex', 'flex-direction': 'row', 'width': '38vw', 'height': '40vh', 'margin-right': '1.5vw'})
+            #style = {'display': 'flex', 'flex-direction': 'row', 'align-items': 'center', 'justify-content': 'center'})
     else:
         return html.P(children = ["Hover on a county on the map", html.Br(), "to display more data"], style = {'text-align':'center', 'color': 'white', 'font-size': '28px', 'margin-bottom': '25vh'})
 
@@ -138,3 +150,9 @@ def update_top_store(hoverData, data):
                         html.H4(f'#1 item: {item_name} ', style = {'text-align': 'left', 'order': '1', 'height' : '1.6vh'})],
                         style = {'display':'flex', 'flex-direction':'row', 'align-items':'center', 'justify-content': 'space-between',
                                  'color': 'black', 'margin-left': '0.3rem', 'margin-right': '0.2rem', 'margin-top': '5px'})
+
+clientside_callback(
+    ClientsideFunction(namespace="clientside", function_name="make_draggable"),
+    Output("hover-bar-chart", "data-drag"),
+    [Input("drag-container-1", "id"), Input("drag-container-2", "id")],
+)
