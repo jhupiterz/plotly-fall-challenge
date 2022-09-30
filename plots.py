@@ -1,7 +1,10 @@
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+import os
 import utils
+
+MAPBOX_TOKEN = os.environ.get('MAPBOX_TOKEN')
 
 def map_weekdays(x):
     if x == 0:

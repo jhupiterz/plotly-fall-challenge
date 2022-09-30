@@ -27,3 +27,13 @@ six>=1.14
 joblib
 memoized-property
 termcolor
+
+#app
+gunicorn
+uvicorn
+urllib
+plotly.express
+plotly.graph_objects
+dash
+dash_bootstrap_components
+
