@@ -6,24 +6,6 @@ import dash_bootstrap_components as dbc
 
 dash.register_page(__name__, path='/sales')
 
-radioitems = html.Div(
-    [
-        dbc.Label("Time period"),
-        dbc.RadioItems(
-            options=[
-                {"label": "2021", "value": 2021},
-                {"label": "Q1", "value": 'Q1'},
-                {"label": "Q2", "value": 'Q2'},
-                {"label": "Q3", "value": 'Q3'},
-                {"label": "Q4", "value": 'Q4'}
-            ],
-            value=2021,
-            inline=True,
-            id="radioitems-input",
-        ),
-    ], style = {'margin-left': '1rem', 'order': '3'}
-)
-
 layout = html.Div([
 
     html.Div([
@@ -58,11 +40,11 @@ def render_tab_content(tab_value, data):
     county_options = [{'label': i, 'value': i} for i in df['county'].unique()]
     store_options = [{'label': i, 'value': i} for i in df['store_number'].unique()]
     if tab_value == 'iowa':
-        return html.Div([
+        return dcc.Loading(html.Div([
             html.Div(id = 'iowa-store', style = {'width': '88vw', 'height': '67vh', 'border-radius': '5px'})
-            ])
+            ]))
     elif tab_value == 'county':
-        return html.Div([
+        return dcc.Loading(html.Div([
             html.Div(id = 'county-store', children = [
                 html.Div([
                     html.Div(id = 'county-store-1', children = [
@@ -83,9 +65,9 @@ def render_tab_content(tab_value, data):
                                 'justify-content': 'space-between', 'width': '88vw', 'height': '65vh'})
             ],
             style = {'width': '88vw', 'height': '67vh', 'border-radius': '5px'})
-            ])
+            ]))
     else:
-        return html.Div([
+        return dcc.Loading(html.Div([
             html.Div(id = 'specific-store', children = [
                 html.Div([
                     html.Div(id = 'specific-store-1', children = [
@@ -105,7 +87,7 @@ def render_tab_content(tab_value, data):
                     ], style = {'display': 'flex', 'flex-direction': 'row', 'align-items': 'center', 'margin': 'auto',
                                 'justify-content': 'space-between', 'width': '88vw', 'height': '65vh'})
             ], style = {'width': '88vw', 'height': '67vh', 'border-radius': '5px'})
-            ])
+            ]))
 
 @callback(Output('iowa-store', 'children'),
           Input('card-tabs', 'active_tab'),
@@ -119,7 +101,7 @@ def render_iowa_store(tab, data):
         store_number_1 = iowa_store.iloc[0]['store_number']
         store_name_2 = iowa_store.iloc[1]['store_name']
         store_number_2 = iowa_store.iloc[1]['store_number']
-        return html.Div([
+        return dcc.Loading(html.Div([
             dcc.Store(id = 'store-infos', data = {'store_name_1': store_name_1, 'store_number_1': store_number_1, 'store_name_2': store_name_2, 'store_number_2': store_number_2}),
             html.Div([
                 html.Div([
@@ -146,7 +128,7 @@ def render_iowa_store(tab, data):
             ], style = {'order': '2', 'width': '42vw', 'height': '65vh', 'margin': 'auto',
                         'backgroundColor': 'white', 'border-radius': '5px', 'margin-top': '0.5rem'})
             ], style = {'display': 'flex', 'flex-direction': 'row', 'align-items': 'center', 'margin': 'auto',
-                        'justify-content': 'space-between', 'width': '88vw', 'height': '65vh'})
+                        'justify-content': 'space-between', 'width': '88vw', 'height': '65vh'}))
 
 @callback(Output('county-store-1-content', 'children'),
          Input('county-dropdown-1', 'value'),

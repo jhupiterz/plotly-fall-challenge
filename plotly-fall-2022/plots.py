@@ -1,4 +1,3 @@
-from turtle import title, width
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
@@ -204,8 +203,8 @@ def monthly_waterfall(df):
                         connector = {"line":{"color":"rgb(63, 63, 63)"}},
                     ))
     fig.update_layout(
-        width = 1350,
-        height = 210,
+        width = 1360,
+        height = 225,
         paper_bgcolor='rgba(0, 0, 0, 0)',
         plot_bgcolor='rgba(0, 0, 0, 0)',
         showlegend = False,
@@ -231,8 +230,10 @@ def line_chart_invoices(df, counties):
                "2021-06-30","2021-07-31","2021-08-31","2021-09-30","2021-10-31","2021-11-30"]
     tick_vals = ["2020-12-15","2021-01-15","2021-02-15","2021-03-15","2021-04-15","2021-05-15",
                  "2021-06-15","2021-07-15","2021-08-15","2021-09-15","2021-10-15","2021-11-15"]
-    fig = px.line(df_to_plot, x='date', y='invoice_mean',
-              labels=dict(date="", invoice_and_item_number="Number of invoices"))
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=df_to_plot['date'], y=df_to_plot['invoice_mean'],
+                        mode='lines',
+                        name='State average'))
     if counties:
         for county in counties:
             df_county_sorted = df[df['county'] == county].groupby(pd.Grouper(freq="D")).count()[['invoice_and_item_number']]
@@ -241,7 +242,7 @@ def line_chart_invoices(df, counties):
             df_county_to_plot = df_county_sorted[(df_county_sorted['weekday'] != 5) & (df_county_sorted['weekday'] != 6)]
             fig.add_trace(go.Scatter(x=df_county_to_plot["date"],
                                      y=df_county_to_plot["invoice_and_item_number"],
-                                     name= county, mode='lines'))
+                                     name= county.capitalize(), line = dict(dash='dot'), opacity=0.85))
     for v_line in v_lines:
         fig.add_vline(x=v_line, line_width=1, line_dash="dash", line_color="black")
     fig.update_xaxes(tickvals=tick_vals,
@@ -251,16 +252,23 @@ def line_chart_invoices(df, counties):
     fig.update_yaxes(title_text="Number of invoices")
     fig.update_layout(
         width = 1350,
-        height = 210,
+        height = 250,
         hovermode="x unified",
         hoverlabel=dict(
             bgcolor="white",
             font_size=14,
-            font_family="Rockwell"
+            font_family="Arial sans serif"
         ),
         paper_bgcolor='rgba(0, 0, 0, 0)',
         plot_bgcolor='rgba(0, 0, 0, 0)',
         showlegend = True,
+        legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        xanchor="right",
+        y=1.01,
+        x=0.8
+        ),
         margin=dict(l=0, r=0, t=0, b=0)
     )
     return fig

@@ -1,9 +1,7 @@
-from anyio import aclose_forcefully
-import pandas as pd
-import utils, plots
+import utils
 
 import dash
-from dash import dcc, html, Input, Output
+from dash import dcc, html
 import dash_bootstrap_components as dbc
 
 app = dash.Dash(
@@ -19,8 +17,6 @@ sidebar = html.Div(
     [
         html.Div(
             [
-                # width: 3rem ensures the logo is the exact width of the
-                # collapsed sidebar (accounting for padding)
                 html.Img(src="assets/bottle_logo.png", style={"width": "5.8rem", 'margin-left': '-1.5vw'}),
                 html.H2("Cheers!", style={'margin-left': '-0.5vw'}),
             ],
@@ -66,7 +62,8 @@ sidebar = html.Div(
                         html.I(className="fas fa-info-circle me-2"),
                         html.Span("Info")
                     ],
-                    n_clicks=0
+                    href="/info",
+                    active="exact"
                 )
             ],
             vertical=True,
@@ -85,4 +82,4 @@ app.layout = html.Div([
 
 # Runs the app ------------------------------------------------------------
 if __name__ == '__main__':
-    app.run_server(debug=True, use_reloader=True)
+    app.run_server(debug=False, use_reloader=True)

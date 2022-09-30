@@ -10,7 +10,8 @@ add_trace_button = dbc.Button("add trace", id = 'trace-button', className="me-1"
 
 add_trace_dropdown = dcc.Dropdown(
     id = 'add-trace-dropdown',
-    style = {'width': '20vw'},
+    placeholder= "Add traces (max. 3)",
+    style = {'width': '25vw', 'margin-left':'31.5vw', 'margin-top':'-4.5vh', 'margin-bottom': 0},
     multi=True
 )
 
@@ -35,17 +36,17 @@ layout_3 = html.Div([
         html.Div(id = 'timeseries-container', children = [
             html.Div(id = 'drag-container-3', className = 'container', children = [
                 dbc.Card([
-                    dbc.CardHeader(children = ["🌀  Number of invoices", add_trace_button], style = {'font-size': '24px', 'height': '6vh'}),
+                    dbc.CardHeader(children = ["🌀  Number of invoices", add_trace_dropdown], style = {'font-size': '24px', 'height': '6vh'}),
                     dbc.CardBody(
-                        dcc.Graph(id='line_l3', style = {'width': '89vw', 'height': '250px', 'padding': '5px', 'margin-top': '0.5rem'}),
+                        dcc.Loading(dcc.Graph(id='line_l3', style = {'width': '89vw', 'height': '280px', 'padding': '5px', 'margin-top': '-1rem'})),
                     ),
-                ], style = {'height': '320px', 'width': '90vw', 'margin-right': '0.5vw', 'margin-top': '2vh'})
+                ], style = {'height': '320px', 'width': '90vw', 'margin-top': '2vh'})
             ], style = {'display': 'flex', 'flex-direction': 'column'}),
             html.Div(id = 'drag-container-4', className = 'container', children = [
                 dbc.Card([
                     dbc.CardHeader(children = ["🌀  Monthly waterfalls"], style = {'font-size': '24px'}),
                     dbc.CardBody(
-                        dcc.Graph(id='waterfall_l3', style = {'width': '89vw', 'height': '250px', 'padding': '5px', 'margin-top': '0.5rem'}),
+                        dcc.Loading(dcc.Graph(id='waterfall_l3', style = {'width': '90vw', 'height': '250px', 'padding': '5px', 'margin-top': '0.5rem', 'margin-left': '-1vw'})),
                     ),
                 ], style = {'height': '320px', 'width': '90vw', 'margin-top': '2vh'}),
             ], style = {'height': '80vh', 'width': '85vw', 'display': 'flex', 'flex-direction': 'column', 'align-items': 'flex-start'}),

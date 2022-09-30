@@ -57,7 +57,7 @@ def update_category_options(data):
 
 @callback(
     Output('hover-bar-chart', 'children'),
-    Input('map', 'hoverData'),
+    Input('map', 'clickData'),
     Input('store-data', 'data')
 )
 def create_bar_chart(hoverData, data):
@@ -90,20 +90,21 @@ def create_bar_chart(hoverData, data):
                     #     dcc.Graph(figure=fig_2, style = {'width': '260px', 'height': '310px', 'padding': '5px'})
                     ], style = {'order': '2', 'display': 'flex', 'flex-direction': 'row', 'width': '38vw', 'height': '40vh', 'margin-right': '1.5vw'})
             #style = {'display': 'flex', 'flex-direction': 'row', 'align-items': 'center', 'justify-content': 'center'})
-    else:
-        return html.P(children = ["Hover on a county on the map", html.Br(), "to display more data"], style = {'text-align':'center', 'color': 'white', 'font-size': '28px', 'margin-bottom': '25vh'})
-
+            
 @callback(
     Output('county_name', 'children'),
-    Input('map', 'hoverData')
+    Input('map', 'clickData')
 )
 def update_county_name(hoverData):
     if hoverData:
         return f"County: {hoverData['points'][0]['customdata'][0].capitalize()}"
+    else:
+        return html.P(children = ["Click on a county on the map", html.Br(), "to display more data"], style = {'text-align':'center', 'color': 'white', 'font-size': '28px', 'margin-bottom': '25vh'})
+
 
 @callback(
     Output('top-buyer', 'children'),
-    Input('map', 'hoverData'),
+    Input('map', 'clickData'),
     Input('store-data', 'data')
 )
 def update_top_store(hoverData, data):
@@ -120,7 +121,7 @@ def update_top_store(hoverData, data):
 
 @callback(
     Output('top-vendor', 'children'),
-    Input('map', 'hoverData'),
+    Input('map', 'clickData'),
     Input('store-data', 'data')
 )
 def update_top_store(hoverData, data):
@@ -137,7 +138,7 @@ def update_top_store(hoverData, data):
 
 @callback(
     Output('top-item', 'children'),
-    Input('map', 'hoverData'),
+    Input('map', 'clickData'),
     Input('store-data', 'data')
 )
 def update_top_store(hoverData, data):
@@ -146,6 +147,8 @@ def update_top_store(hoverData, data):
         FIPS = hoverData['points'][0]['location']
         temp_ = df[df['full_fips'] == FIPS].groupby(['item_number', 'item_description'], as_index=False).sum()[['item_number', 'item_description', 'benefit']].sort_values('benefit', ascending=False).head(1).reset_index()
         item_name = temp_['item_description'][0]
+        if len(item_name) > 35:
+            item_name = item_name[:35] + '...'
         return html.P(children = [
                         html.H4(f'#1 item: {item_name} ', style = {'text-align': 'left', 'order': '1', 'height' : '1.6vh'})],
                         style = {'display':'flex', 'flex-direction':'row', 'align-items':'center', 'justify-content': 'space-between',
