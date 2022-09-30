@@ -31,8 +31,7 @@ termcolor
 #app
 gunicorn
 uvicorn
-plotly.express
-plotly.graph_objects
+plotly
 dash
 dash_bootstrap_components
 
