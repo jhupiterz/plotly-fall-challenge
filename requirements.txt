@@ -31,7 +31,6 @@ termcolor
 #app
 gunicorn
 uvicorn
-urllib
 plotly.express
 plotly.graph_objects
 dash
