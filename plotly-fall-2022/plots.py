@@ -205,7 +205,7 @@ def monthly_waterfall(df):
                     ))
     fig.update_layout(
         width = 1350,
-        height = 280,
+        height = 210,
         paper_bgcolor='rgba(0, 0, 0, 0)',
         plot_bgcolor='rgba(0, 0, 0, 0)',
         showlegend = False,
@@ -251,7 +251,7 @@ def line_chart_invoices(df, counties):
     fig.update_yaxes(title_text="Number of invoices")
     fig.update_layout(
         width = 1350,
-        height = 280,
+        height = 210,
         hovermode="x unified",
         hoverlabel=dict(
             bgcolor="white",

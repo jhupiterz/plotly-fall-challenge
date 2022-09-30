@@ -52,7 +52,7 @@ layout_2 = html.Div([
                                                                                   {'label': 'Total profits', 'value': 'profit'}],
                          value = 'profit', style = {'width': '15vw', 'margin-top': '2rem', 'margin-right': '1rem'}),
             dcc.Dropdown(id= 'map-color-l2', options=px.colors.named_colorscales(), value='viridis', style = {'width': '15vw', 'margin-top': '2rem'})
-        ], style = {'order': '3', 'display': 'flex', 'flex-direction': 'row', 'align-items': 'center', 'justify-content': 'space-between', 'margin-top': '0.2vh'}),
+        ], style = {'order': '3', 'display': 'flex', 'flex-direction': 'row', 'align-items': 'center', 'justify-content': 'space-between', 'margin-top': '5vh'}),
         dcc.Graph(id='map_l2', style = {'order':'4', 'border-radius': '5px', 'width': '810px', 'height': '510px', 'backgroundColor': 'white', 'padding': '5px', 'margin-top': '2rem'}),
         html.H1(['Iowa Liquor Sales',html.Br(),'2021 Profits Statement'], style = {'order':'1', 'color': 'black', 'margin-top': '2rem', 'text-align': 'left'}),
     ], style = {'order':'1', 'height': '80vh', 'width': '50vw', 'display': 'flex', 'flex-direction': 'column', 'align-items': 'flex-start', 'margin-left': '7rem'}),
