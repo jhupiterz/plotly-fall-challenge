@@ -10,6 +10,7 @@ app = dash.Dash(
     external_stylesheets=[dbc.themes.BOOTSTRAP, dbc.icons.FONT_AWESOME],
     meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1", 'charSet':'“UTF-8”'}])
 
+server = app.server
 app.title = "Iowa Liquor Sales"
 map_center = [42.036, -93.46505]
 
