@@ -1,10 +1,14 @@
 import pandas as pd
 import plots
 import dash
+import utils
 from dash import dcc, html, Input, Output, callback
 import dash_bootstrap_components as dbc
 
 dash.register_page(__name__, path='/sales')
+
+global df
+df = pd.DataFrame(utils.read_json_data('data.json'))
 
 layout = html.Div([
 
@@ -32,11 +36,10 @@ layout = html.Div([
                 'flex-direction': 'row', 'align-items': 'flex-start', 'justify-content': 'space-between'})
 
 @callback(Output('card-content', 'children'),
-          Input('card-tabs', 'active_tab'),
-          Input('store-data', 'data'),
+          Input('card-tabs', 'active_tab')
     )
-def render_tab_content(tab_value, data):
-    df = pd.DataFrame(data)
+def render_tab_content(tab_value):
+    #df = pd.DataFrame(data)
     county_options = [{'label': i, 'value': i} for i in df['county'].unique()]
     store_options = [{'label': i, 'value': i} for i in df['store_number'].unique()]
     if tab_value == 'iowa':
@@ -90,12 +93,11 @@ def render_tab_content(tab_value, data):
             ]))
 
 @callback(Output('iowa-store', 'children'),
-          Input('card-tabs', 'active_tab'),
-          Input('store-data', 'data')
+          Input('card-tabs', 'active_tab')
 )
-def render_iowa_store(tab, data):
+def render_iowa_store(tab):
     if tab == 'iowa':
-        df = pd.DataFrame(data)
+        #df = pd.DataFrame(data)
         iowa_store = df.groupby(['store_number', 'store_name'], as_index=False).sum()[['store_number', 'store_name', 'profit']].sort_values(by = 'profit', ascending = False).head(2)
         store_name_1 = iowa_store.iloc[0]['store_name']
         store_number_1 = iowa_store.iloc[0]['store_number']
@@ -131,14 +133,13 @@ def render_iowa_store(tab, data):
                         'justify-content': 'space-between', 'width': '88vw', 'height': '65vh'}))
 
 @callback(Output('county-store-1-content', 'children'),
-         Input('county-dropdown-1', 'value'),
-         Input('store-data', 'data')
+         Input('county-dropdown-1', 'value')
 )
-def render_county_store_1(county1, data):
-    df = pd.DataFrame(data)
-    df_1 = df[df['county'] == county1].groupby(['store_number', 'store_name'], as_index=False).sum()[['store_number', 'store_name', 'profit']].sort_values(by = 'profit', ascending = False).head(1)
-    store_name_1 = df_1.iloc[0]['store_name']
-    store_number_1 = df_1.iloc[0]['store_number']
+def render_county_store_1(county1):
+    #df = pd.DataFrame(data)
+    df_ = df[df['county'] == county1].groupby(['store_number', 'store_name'], as_index=False).sum()[['store_number', 'store_name', 'profit']].sort_values(by = 'profit', ascending = False).head(1)
+    store_name_1 = df_.iloc[0]['store_name']
+    store_number_1 = df_.iloc[0]['store_number']
     return html.Div([
             dcc.Store(id = 'county-infos-1', data = {'store_name_1': store_name_1, 'store_number_1': store_number_1}),
             html.Div([
@@ -155,14 +156,13 @@ def render_county_store_1(county1, data):
                             'border-radius': '5px', 'margin-top': '0rem'})])
 
 @callback(Output('county-store-2-content', 'children'),
-         Input('county-dropdown-2', 'value'),
-         Input('store-data', 'data')
+         Input('county-dropdown-2', 'value')
 )
-def render_county_store_2(county2, data):
-    df = pd.DataFrame(data)
-    df_2 = df[df['county'] == county2].groupby(['store_number', 'store_name'], as_index=False).sum()[['store_number', 'store_name', 'profit']].sort_values(by = 'profit', ascending = False).head(1)
-    store_name_2 = df_2.iloc[0]['store_name']
-    store_number_2 = df_2.iloc[0]['store_number']
+def render_county_store_2(county2):
+    #df = pd.DataFrame(data)
+    df_ = df[df['county'] == county2].groupby(['store_number', 'store_name'], as_index=False).sum()[['store_number', 'store_name', 'profit']].sort_values(by = 'profit', ascending = False).head(1)
+    store_name_2 = df_.iloc[0]['store_name']
+    store_number_2 = df_.iloc[0]['store_number']
     return html.Div([
                 dcc.Store(id = 'county-infos-2', data = {'store_name_2': store_name_2, 'store_number_2': store_number_2}),
                 html.Div([
@@ -178,11 +178,10 @@ def render_county_store_2(county2, data):
                         'border-radius': '5px', 'margin-top': '0rem'})
 
 @callback(Output('specific-store-1-content', 'children'),
-         Input('specific-dropdown-1', 'value'),
-         Input('store-data', 'data')
+         Input('specific-dropdown-1', 'value')
 )
-def render_county_store_1(store1, data):
-    df = pd.DataFrame(data)
+def render_county_store_1(store1):
+    #df = pd.DataFrame(data)
     store_name_1 = df[df['store_number']== store1]['store_name'].unique()[0]
     return html.Div([
             dcc.Store(id = 'specific-store-infos-1', data = {'store_name_1': store_name_1, 'store_number_1': store1}),
@@ -200,11 +199,10 @@ def render_county_store_1(store1, data):
                             'border-radius': '5px', 'margin-top': '-0.5rem'})])
 
 @callback(Output('specific-store-2-content', 'children'),
-         Input('specific-dropdown-2', 'value'),
-         Input('store-data', 'data')
+         Input('specific-dropdown-2', 'value')
 )
-def render_county_store_1(store2, data):
-    df = pd.DataFrame(data)
+def render_county_store_1(store2):
+    #df = pd.DataFrame(data)
     store_name_2 = df[df['store_number']== store2]['store_name'].unique()[0]
     return html.Div([
             dcc.Store(id = 'specific-store-infos-2', data = {'store_name_2': store_name_2, 'store_number_2': store2}),
@@ -222,15 +220,14 @@ def render_county_store_1(store2, data):
 
 @callback(Output('county-store-1-cum', 'figure'),
           Input('county-dropdown-1', 'value'),
-          Input('store-data', 'data'),
           Input('county-infos-1', 'data')
 )
-def render_cum_graph(county, data, store_data):
-    df = pd.DataFrame(data)
-    df = df[df['county']==county]
-    df['date'] = pd.to_datetime(df['date'])
-    df = df[df['store_number'] == store_data['store_number_1']].sort_values('date', ascending=True).set_index('date')
-    daily_sales = df.groupby(pd.Grouper(freq="D")).sum()[['benefit', 'cost', 'profit']]
+def render_cum_graph(county, store_data):
+    #df = pd.DataFrame(data)
+    df_ = df[df['county']==county]
+    df_['date'] = pd.to_datetime(df['date'])
+    df_ = df[df['store_number'] == store_data['store_number_1']].sort_values('date', ascending=True).set_index('date')
+    daily_sales = df_.groupby(pd.Grouper(freq="D")).sum()[['benefit', 'cost', 'profit']]
     daily_sales['cum_sum_benefit'] = daily_sales['benefit'].cumsum()
     daily_sales['cum_sum_cost'] = daily_sales['cost'].cumsum()
     daily_sales['cum_sum_profit'] = daily_sales['profit'].cumsum()
@@ -240,15 +237,14 @@ def render_cum_graph(county, data, store_data):
 
 @callback(Output('county-store-2-cum', 'figure'),
           Input('county-dropdown-2', 'value'),
-          Input('store-data', 'data'),
           Input('county-infos-2', 'data')
 )
-def render_cum_graph(county, data, store_data):
-    df = pd.DataFrame(data)
-    df = df[df['county'] == county]
-    df['date'] = pd.to_datetime(df['date'])
-    df = df[df['store_number'] == store_data['store_number_2']].sort_values('date', ascending=True).set_index('date')
-    daily_sales = df.groupby(pd.Grouper(freq="D")).sum()[['benefit', 'cost', 'profit']]
+def render_cum_graph(county, store_data):
+    #df = pd.DataFrame(data)
+    df_ = df[df['county'] == county]
+    df_['date'] = pd.to_datetime(df['date'])
+    df_ = df_[df_['store_number'] == store_data['store_number_2']].sort_values('date', ascending=True).set_index('date')
+    daily_sales = df_.groupby(pd.Grouper(freq="D")).sum()[['benefit', 'cost', 'profit']]
     daily_sales['cum_sum_benefit'] = daily_sales['benefit'].cumsum()
     daily_sales['cum_sum_cost'] = daily_sales['cost'].cumsum()
     daily_sales['cum_sum_profit'] = daily_sales['profit'].cumsum()
@@ -257,14 +253,13 @@ def render_cum_graph(county, data, store_data):
     return fig
 
 @callback(Output('iowa-store-1-cum', 'figure'),
-          Input('store-data', 'data'),
           Input('store-infos', 'data')
 )
-def render_cum_graph(data, store_data):
-    df = pd.DataFrame(data)
+def render_cum_graph(store_data):
+    #df = pd.DataFrame(data)
     df['date'] = pd.to_datetime(df['date'])
-    df = df[df['store_number'] == store_data['store_number_1']].sort_values('date', ascending=True).set_index('date')
-    daily_sales = df.groupby(pd.Grouper(freq="D")).sum()[['benefit', 'cost', 'profit']]
+    df_ = df[df['store_number'] == store_data['store_number_1']].sort_values('date', ascending=True).set_index('date')
+    daily_sales = df_.groupby(pd.Grouper(freq="D")).sum()[['benefit', 'cost', 'profit']]
     daily_sales['cum_sum_benefit'] = daily_sales['benefit'].cumsum()
     daily_sales['cum_sum_cost'] = daily_sales['cost'].cumsum()
     daily_sales['cum_sum_profit'] = daily_sales['profit'].cumsum()
@@ -273,14 +268,13 @@ def render_cum_graph(data, store_data):
     return fig
 
 @callback(Output('iowa-store-2-cum', 'figure'),
-          Input('store-data', 'data'),
             Input('store-infos', 'data')
 )
-def render_cum_graph(data, store_data):
-    df = pd.DataFrame(data)
+def render_cum_graph(store_data):
+    #df = pd.DataFrame(data)
     df['date'] = pd.to_datetime(df['date'])
-    df = df[df['store_number'] == store_data['store_number_2']].sort_values('date', ascending=True).set_index('date')
-    daily_sales = df.groupby(pd.Grouper(freq="D")).sum()[['benefit', 'cost', 'profit']]
+    df_ = df[df['store_number'] == store_data['store_number_2']].sort_values('date', ascending=True).set_index('date')
+    daily_sales = df_.groupby(pd.Grouper(freq="D")).sum()[['benefit', 'cost', 'profit']]
     daily_sales['cum_sum_benefit'] = daily_sales['benefit'].cumsum()
     daily_sales['cum_sum_cost'] = daily_sales['cost'].cumsum()
     daily_sales['cum_sum_profit'] = daily_sales['profit'].cumsum()
@@ -289,14 +283,13 @@ def render_cum_graph(data, store_data):
     return fig
 
 @callback(Output('specific-1-cum', 'figure'),
-          Input('store-data', 'data'),
           Input('specific-dropdown-1', 'value')
 )
-def render_cum_graph(data, store_number):
-    df = pd.DataFrame(data)
+def render_cum_graph(store_number):
+    #df = pd.DataFrame(data)
     df['date'] = pd.to_datetime(df['date'])
-    df = df[df['store_number'] == store_number].sort_values('date', ascending=True).set_index('date')
-    daily_sales = df.groupby(pd.Grouper(freq="D")).sum()[['benefit', 'cost', 'profit']]
+    df_ = df[df['store_number'] == store_number].sort_values('date', ascending=True).set_index('date')
+    daily_sales = df_.groupby(pd.Grouper(freq="D")).sum()[['benefit', 'cost', 'profit']]
     daily_sales['cum_sum_benefit'] = daily_sales['benefit'].cumsum()
     daily_sales['cum_sum_cost'] = daily_sales['cost'].cumsum()
     daily_sales['cum_sum_profit'] = daily_sales['profit'].cumsum()
@@ -305,14 +298,13 @@ def render_cum_graph(data, store_number):
     return fig
 
 @callback(Output('specific-2-cum', 'figure'),
-          Input('store-data', 'data'),
           Input('specific-dropdown-2', 'value')
 )
-def render_cum_graph(data, store_number):
-    df = pd.DataFrame(data)
+def render_cum_graph(store_number):
+    #df = pd.DataFrame(data)
     df['date'] = pd.to_datetime(df['date'])
-    df = df[df['store_number'] == store_number].sort_values('date', ascending=True).set_index('date')
-    daily_sales = df.groupby(pd.Grouper(freq="D")).sum()[['benefit', 'cost', 'profit']]
+    df_ = df[df['store_number'] == store_number].sort_values('date', ascending=True).set_index('date')
+    daily_sales = df_.groupby(pd.Grouper(freq="D")).sum()[['benefit', 'cost', 'profit']]
     daily_sales['cum_sum_benefit'] = daily_sales['benefit'].cumsum()
     daily_sales['cum_sum_cost'] = daily_sales['cost'].cumsum()
     daily_sales['cum_sum_profit'] = daily_sales['profit'].cumsum()
@@ -321,11 +313,10 @@ def render_cum_graph(data, store_number):
     return fig
 
 @callback(Output('dist-plot-1', 'figure'),
-          Input('store-data', 'data'),
             Input('store-infos', 'data')
 )
-def render_cum_graph(data, store_data):
-    df = pd.DataFrame(data)
+def render_cum_graph(store_data):
+    #df = pd.DataFrame(data)
     df['date'] = pd.to_datetime(df['date'])
     df_ = df.groupby(['store_number', 'store_name'], as_index=False).sum()[['store_number', 'store_name', 'profit']]
     store_profit = df_[df_['store_number'] == store_data['store_number_1']]['profit'].values[0]
@@ -333,11 +324,10 @@ def render_cum_graph(data, store_data):
     return fig
 
 @callback(Output('dist-plot-2', 'figure'),
-          Input('store-data', 'data'),
             Input('store-infos', 'data')
 )
-def render_cum_graph(data, store_data):
-    df = pd.DataFrame(data)
+def render_cum_graph(store_data):
+    #df = pd.DataFrame(data)
     df['date'] = pd.to_datetime(df['date'])
     df_ = df.groupby(['store_number', 'store_name'], as_index=False).sum()[['store_number', 'store_name', 'profit']]
     store_profit = df_[df_['store_number'] == store_data['store_number_2']]['profit'].values[0]
@@ -346,38 +336,35 @@ def render_cum_graph(data, store_data):
 
 @callback(Output('dist-plot-3', 'figure'),
           Input('county-dropdown-1', 'value'),
-          Input('store-data', 'data'),
           Input('county-infos-1', 'data')
 )
-def render_cum_graph(county, data, store_data):
-    df = pd.DataFrame(data)
-    df = df[df['county'] == county]
-    df['date'] = pd.to_datetime(df['date'])
-    df_ = df.groupby(['store_number', 'store_name'], as_index=False).sum()[['store_number', 'store_name', 'profit']]
+def render_cum_graph(county, store_data):
+    #df = pd.DataFrame(data)
+    df_ = df[df['county'] == county]
+    df_['date'] = pd.to_datetime(df_['date'])
+    df_ = df_.groupby(['store_number', 'store_name'], as_index=False).sum()[['store_number', 'store_name', 'profit']]
     store_profit = df_[df_['store_number'] == store_data['store_number_1']]['profit'].values[0]
     fig = plots.dist_plot(df_, store_profit)
     return fig
 
 @callback(Output('dist-plot-4', 'figure'),
           Input('county-dropdown-2', 'value'),
-          Input('store-data', 'data'),
           Input('county-infos-2', 'data')
 )
-def render_cum_graph(county, data, store_data):
-    df = pd.DataFrame(data)
-    df = df[df['county'] == county]
-    df['date'] = pd.to_datetime(df['date'])
-    df_ = df.groupby(['store_number', 'store_name'], as_index=False).sum()[['store_number', 'store_name', 'profit']]
+def render_cum_graph(county, store_data):
+    #df = pd.DataFrame(data)
+    df_ = df[df['county'] == county]
+    df_['date'] = pd.to_datetime(df_['date'])
+    df_ = df_.groupby(['store_number', 'store_name'], as_index=False).sum()[['store_number', 'store_name', 'profit']]
     store_profit = df_[df_['store_number'] == store_data['store_number_2']]['profit'].values[0]
     fig = plots.dist_plot(df_, store_profit)
     return fig
 
 @callback(Output('dist-plot-5', 'figure'),
-          Input('specific-dropdown-1', 'value'),
-          Input('store-data', 'data')
+          Input('specific-dropdown-1', 'value')
 )
-def render_cum_graph(store, data):
-    df = pd.DataFrame(data)
+def render_cum_graph(store):
+    #df = pd.DataFrame(data)
     df['date'] = pd.to_datetime(df['date'])
     df_ = df.groupby(['store_number', 'store_name'], as_index=False).sum()[['store_number', 'store_name', 'profit']]
     store_profit = df_[df_['store_number'] == store]['profit'].sum()
@@ -385,11 +372,10 @@ def render_cum_graph(store, data):
     return fig
 
 @callback(Output('dist-plot-6', 'figure'),
-          Input('specific-dropdown-2', 'value'),
-          Input('store-data', 'data')
+          Input('specific-dropdown-2', 'value')
 )
-def render_cum_graph(store, data):
-    df = pd.DataFrame(data)
+def render_cum_graph(store):
+    #df = pd.DataFrame(data)
     df['date'] = pd.to_datetime(df['date'])
     df_ = df.groupby(['store_number', 'store_name'], as_index=False).sum()[['store_number', 'store_name', 'profit']]
     store_profit = df_[df_['store_number'] == store]['profit'].sum()

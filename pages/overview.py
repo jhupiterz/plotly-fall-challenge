@@ -9,10 +9,14 @@ dash.register_page(__name__, path='/')
 
 map_center = [42.036, -93.46505]
 
+global df
+df = pd.DataFrame(utils.read_json_data('data.json'))
+print(df)
+
 layout = html.Div([
     html.Div([
         html.Div([
-            dcc.Dropdown(id = 'category', placeholder = 'Filter by alcohol category', value = 'All', style = {'width': '30vw', 'margin-top': '2rem', 'margin-right': '1rem'}),
+            dcc.Dropdown(id = 'category', placeholder = 'Filter by alcohol category', options = utils.get_category_options(df) ,value = 'All', style = {'width': '30vw', 'margin-top': '2rem', 'margin-right': '1rem'}),
             dcc.Dropdown(id = 'metric', placeholder = 'Select metric', options = [{'label': 'Total invoices', 'value': 'invoice_and_item_number'},
                                                                                   {'label': 'Total sales', 'value': 'benefit'},
                                                                                   {'label': 'Total volume', 'value': 'volume_sold_liters'}],
@@ -33,36 +37,35 @@ layout = html.Div([
 ], style = {'width': '100vw', 'height': '100vh', 'backgroundColor': 'rgba(94, 23, 235, 0.2)', 'display': 'flex', 'flex-direction': 'row', 'align-items': 'flex-start', 'justify-content': 'space-between'})
 
 @callback(Output('map', 'figure'),
-              Input('store-data', 'data'),
+              #Input('store-data', 'data'),
               Input('store-counties', 'data'),
               Input('category', 'value'),
               Input('metric', 'value'))
-def update_map(data, counties, category, metric):
-    df = pd.DataFrame(data)
-    df = df[df['category_name'] == category] if category != 'All' else df
+def update_map(counties, category, metric):
+    #df = pd.DataFrame(data)
+    df_ = df[df['category_name'] == category] if category != 'All' else df
     if metric == 'invoice_and_item_number':
-        grouped_df = df.groupby(['full_fips', 'county'], as_index=False).count()[['full_fips', 'county', 'invoice_and_item_number']]
+        grouped_df = df_.groupby(['full_fips', 'county'], as_index=False).count()[['full_fips', 'county', 'invoice_and_item_number']]
     elif metric == 'benefit':
-        grouped_df = df.groupby(['full_fips', 'county'], as_index=False).sum()[['full_fips', 'county', 'benefit']]
+        grouped_df = df_.groupby(['full_fips', 'county'], as_index=False).sum()[['full_fips', 'county', 'benefit']]
     elif metric == 'volume_sold_liters':
-        grouped_df = df.groupby(['full_fips', 'county'], as_index=False).sum()[['full_fips', 'county', 'volume_sold_liters']]
+        grouped_df = df_.groupby(['full_fips', 'county'], as_index=False).sum()[['full_fips', 'county', 'volume_sold_liters']]
     fig = plots.choropleth_map(grouped_df, counties, map_center, metric, 'viridis')
     return fig
 
-@callback(Output('category', 'options'),
-              Input('store-data', 'data'))
-def update_category_options(data):
-    df = pd.DataFrame(data)
-    return utils.get_category_options(df)
+# @callback(Output('category', 'options'),
+#           Input('store-data', 'data'))
+# def update_category_options(data):
+#     #df = pd.DataFrame(data)
+#     return utils.get_category_options(df)
 
 @callback(
     Output('hover-bar-chart', 'children'),
-    Input('map', 'clickData'),
-    Input('store-data', 'data')
+    Input('map', 'clickData')
 )
-def create_bar_chart(hoverData, data):
+def create_bar_chart(hoverData):
     if hoverData:
-        df = pd.DataFrame(data)
+        #df = pd.DataFrame(data)
         FIPS = hoverData['points'][0]['location']
         df['date'] = pd.to_datetime(df['date'])
         fig_2 = plots.month_pie_chart(df)
@@ -104,12 +107,11 @@ def update_county_name(hoverData):
 
 @callback(
     Output('top-buyer', 'children'),
-    Input('map', 'clickData'),
-    Input('store-data', 'data')
+    Input('map', 'clickData')
 )
-def update_top_store(hoverData, data):
+def update_top_store(hoverData):
     if hoverData:
-        df = pd.DataFrame(data)
+        #df = pd.DataFrame(data)
         FIPS = hoverData['points'][0]['location']
         temp_ = df[df['full_fips'] == FIPS].groupby(['store_number', 'store_name'], as_index=False).sum()[['store_number', 'store_name', 'benefit']].sort_values('benefit', ascending=False).head(1).reset_index()
         store_name = temp_['store_name'][0].split(' ')[0].capitalize()
@@ -121,12 +123,11 @@ def update_top_store(hoverData, data):
 
 @callback(
     Output('top-vendor', 'children'),
-    Input('map', 'clickData'),
-    Input('store-data', 'data')
+    Input('map', 'clickData')
 )
-def update_top_store(hoverData, data):
+def update_top_store(hoverData):
     if hoverData:
-        df = pd.DataFrame(data)
+        #df = pd.DataFrame(data)
         FIPS = hoverData['points'][0]['location']
         temp_ = df[df['full_fips'] == FIPS].groupby(['vendor_number', 'vendor_name'], as_index=False).sum()[['vendor_number', 'vendor_name', 'benefit']].sort_values('benefit', ascending=False).head(1).reset_index()
         vendor_name = temp_['vendor_name'][0].split(' ')[0].capitalize()
@@ -138,12 +139,11 @@ def update_top_store(hoverData, data):
 
 @callback(
     Output('top-item', 'children'),
-    Input('map', 'clickData'),
-    Input('store-data', 'data')
+    Input('map', 'clickData')
 )
-def update_top_store(hoverData, data):
+def update_top_store(hoverData):
     if hoverData:
-        df = pd.DataFrame(data)
+        #df = pd.DataFrame(data)
         FIPS = hoverData['points'][0]['location']
         temp_ = df[df['full_fips'] == FIPS].groupby(['item_number', 'item_description'], as_index=False).sum()[['item_number', 'item_description', 'benefit']].sort_values('benefit', ascending=False).head(1).reset_index()
         item_name = temp_['item_description'][0]

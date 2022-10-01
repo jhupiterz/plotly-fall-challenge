@@ -75,7 +75,7 @@ sidebar = html.Div(
 )
 
 app.layout = html.Div([
-    dcc.Store(id='store-data', data = utils.read_json_data('data.json'), storage_type = 'memory'),
+    #dcc.Store(id='store-data', data = utils.read_json_data('data.json'), storage_type = 'memory'),
     dcc.Store(id='store-counties', data = utils.load_counties(), storage_type = 'memory'),
     sidebar,
     dash.page_container,
