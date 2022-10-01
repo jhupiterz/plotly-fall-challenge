@@ -53,12 +53,6 @@ def update_map(counties, category, metric):
     fig = plots.choropleth_map(grouped_df, counties, map_center, metric, 'viridis')
     return fig
 
-# @callback(Output('category', 'options'),
-#           Input('store-data', 'data'))
-# def update_category_options(data):
-#     #df = pd.DataFrame(data)
-#     return utils.get_category_options(df)
-
 @callback(
     Output('hover-bar-chart', 'children'),
     Input('map', 'clickData')
@@ -85,14 +79,8 @@ def create_bar_chart(hoverData):
                             dcc.Graph(figure=fig_2, style = {'width': '15vw', 'height': '30vh', 'margin-top': 0})
                         ),
                     ], style = {'height': '40vh', 'width': '18vw', 'margin-right': '0.5vw', 'margin-left': '0.5vw'}),
-                    # html.H2('Top categories (USD)', style = {'order': '5', 'color': 'black', 'margin-bottom': '1rem', 'font-size': '28px'}),
-                    # dcc.Graph(figure=fig_1, style = {'backgroundColor': 'white', 'border-radius': '5px', 'width': '280px', 'height': '310px', 'padding': '5px'})
                     ], style = {'display': 'flex', 'flex-direction': 'row', 'align-items': 'center', 'width': '38vw', 'height': '40vh', 'margin-right': '1.5vw'}),
-                    # html.Div([
-                    #     html.H2('Sales per month', style = {'color': 'black', 'margin-bottom': '0.5rem', 'font-size': '28px', 'margin-left': '1.7vw'}),
-                    #     dcc.Graph(figure=fig_2, style = {'width': '260px', 'height': '310px', 'padding': '5px'})
-                    ], style = {'order': '2', 'display': 'flex', 'flex-direction': 'row', 'width': '38vw', 'height': '40vh', 'margin-right': '1.5vw'})
-            #style = {'display': 'flex', 'flex-direction': 'row', 'align-items': 'center', 'justify-content': 'center'})
+                ], style = {'order': '2', 'display': 'flex', 'flex-direction': 'row', 'width': '38vw', 'height': '40vh', 'margin-right': '1.5vw'})
             
 @callback(
     Output('county_name', 'children'),

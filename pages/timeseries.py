@@ -64,13 +64,6 @@ layout_3 = html.Div([
 layout = layout_3
         
 ### LAYOUT 3 ###
-# @callback(Output('waterfall_l3', 'figure'),
-#               Input('store-data', 'data'))
-# def create_monthly_waterfall(data):
-#     df = pd.DataFrame(data)
-#     df['date'] = pd.to_datetime(df['date'])
-#     fig = plots.monthly_waterfall(df)
-#     return fig
 
 @callback(
     Output('add-trace-modal', 'is_open'),
@@ -79,15 +72,6 @@ layout = layout_3
 def add_trace_to_line_plot(n_clicks):
     if n_clicks > 0:
         return True
-
-# @callback(
-#     Output('add-trace-dropdown', 'options'),
-#     Input('store-data', 'data')
-# )
-# def generate_dropdown(data):
-#     df = pd.DataFrame(data)
-#     county_options = [{'label': i, 'value': i} for i in df['county'].unique()]
-#     return county_options
 
 @callback(
     Output('line_l3', 'figure'),
