@@ -1,5 +1,6 @@
 import pandas as pd
 import utils, plots
+from variables import df
 
 import dash
 import dash_bootstrap_components as dbc
@@ -8,10 +9,6 @@ from dash import dcc, html, Input, Output, callback, clientside_callback, Client
 dash.register_page(__name__, path='/')
 
 map_center = [42.036, -93.46505]
-
-global df
-df = pd.DataFrame(utils.read_json_data('data.json'))
-print(df)
 
 layout = html.Div([
     html.Div([

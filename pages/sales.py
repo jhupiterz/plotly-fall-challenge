@@ -1,14 +1,11 @@
 import pandas as pd
 import plots
 import dash
-import utils
+from variables import df
 from dash import dcc, html, Input, Output, callback
 import dash_bootstrap_components as dbc
 
 dash.register_page(__name__, path='/sales')
-
-global df
-df = pd.DataFrame(utils.read_json_data('data.json'))
 
 layout = html.Div([
 

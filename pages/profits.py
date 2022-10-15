@@ -4,11 +4,10 @@ import dash_bootstrap_components as dbc
 import pandas as pd
 import utils, plots
 import plotly.express as px
+from variables import df
 
 dash.register_page(__name__, path='/profits')
 
-global df
-df = pd.DataFrame(utils.read_json_data('data.json'))
 df['date'] = pd.to_datetime(df['date'])
 
 add_trace_button = dbc.Button("add trace", id = 'trace-button', className="me-1", n_clicks=0, style = {'order':'2', 'border-radius': '20px', 'width': '7vw', 'margin-left': '83vw'})

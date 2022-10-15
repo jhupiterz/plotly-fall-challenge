@@ -3,12 +3,11 @@ import utils
 from dash import dcc, html, Input, Output, callback, clientside_callback, ClientsideFunction
 import dash_bootstrap_components as dbc
 import pandas as pd
+from variables import df
 import plots
 
 dash.register_page(__name__, path='/timeseries')
 
-global df
-df = pd.DataFrame(utils.read_json_data('data.json'))
 df['date'] = pd.to_datetime(df['date'])
 fig = plots.monthly_waterfall(df)
 
